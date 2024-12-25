@@ -11,7 +11,7 @@ int main(){
 
         server_fd=socket(AF_INET, SOCK_STREAM,0);
         if(server_fd==-1){
-                perror("sock creation failed:", 0);
+                perror("sock creation failed:");
                 exit(EXIT_FAILURE);
         }
         memset(&server_addr, 0, sizeof(server_addr));
@@ -19,7 +19,7 @@ int main(){
         server_addr.sin_port=htons(80);
         server_addr.sin_addr.s_addr=htonl(INADDR_ANY);
 
-        if(bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)<0){
+        if(bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)<0)){
                 perror("Bind failed");
                 close(server_fd);
                 exit(EXIT_FAILURE);

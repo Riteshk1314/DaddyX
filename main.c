@@ -29,7 +29,7 @@ int main(){
                 close(server_fd);
                 exit(EXIT_FAILURE);
         }
-        print("server listening on port 80...\n");
+        printf("server listening on port 80...\n");
 	while (1) {
         int client_fd;
         struct sockaddr_in client_addr;

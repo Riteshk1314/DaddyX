@@ -2,7 +2,9 @@
 #include <netinet/in.h>  
 #include <arpa/inet.h>   
 #include <unistd.h>      
-
+#include <stdio.h>    
+#include <stdlib.h>  
+#include <string.h>  
 int main(){
         int server_fd;
         struct sockaddr_in server_addr;

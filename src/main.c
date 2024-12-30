@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Configure proxy backend(s)
-    proxy_add_backend(server_config->proxy_config, "15.197.148.33", 8081);
+    proxy_add_backend(server_config->proxy_config, "93.127.172.77", 5000);
     
 
     server_config->port = 8080;  // Change port if needed

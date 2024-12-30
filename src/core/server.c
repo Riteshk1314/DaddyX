@@ -11,7 +11,7 @@
 #include "../utils/logging.h"  // You'll need to implement this
 
 #define MAX_WORKERS 4
-#define DEFAULT_PORT 80
+#define DEFAULT_PORT 5000
 #define LISTEN_BACKLOG 1024
 
 typedef struct {

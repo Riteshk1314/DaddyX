@@ -46,51 +46,78 @@ int proxy_add_backend(proxy_config_t* config, const char* ip, int port) {
 }
 
 int proxy_handle_request(int client_fd, proxy_config_t* config) {
-    // For simplicity, we'll just use the first backend
     if (config->backend_count == 0) {
         log_error("No backend servers configured");
         return -1;
     }
 
-    backend_server_t* backend = &config->backends[0];
+    backend_server_t* backend = &config->backends[0]; // Using first backend (93.127.172.77:5000)
     
     // Create connection to backend
     int backend_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (backend_fd < 0) {
-        log_error("Failed to create backend socket");
+        log_error("Failed to create backend socket: %s", strerror(errno));
         return -1;
     }
 
+    // Set timeout for both read and write operations
+    struct timeval timeout;
+    timeout.tv_sec = HTTP_TIMEOUT_SECONDS;
+    timeout.tv_usec = 0;
+    setsockopt(backend_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+    setsockopt(backend_fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+
     // Connect to backend
     if (connect(backend_fd, (struct sockaddr*)&backend->addr, sizeof(backend->addr)) < 0) {
-        log_error("Failed to connect to backend %s:%d", backend->ip, backend->port);
+        log_error("Failed to connect to backend %s:%d - %s", 
+                 backend->ip, backend->port, strerror(errno));
         close(backend_fd);
         return -1;
     }
 
-    // Forward data between client and backend
     char buffer[BUFFER_SIZE];
     ssize_t bytes_read;
-
+    size_t total_sent = 0;
+    
     // Forward client request to backend
     while ((bytes_read = read(client_fd, buffer, sizeof(buffer))) > 0) {
-        if (write(backend_fd, buffer, bytes_read) != bytes_read) {
-            log_error("Failed to forward request to backend");
-            break;
+        ssize_t bytes_written = write(backend_fd, buffer, bytes_read);
+        if (bytes_written < 0) {
+            log_error("Failed to forward request to backend: %s", strerror(errno));
+            close(backend_fd);
+            return -1;
         }
         
-        // If we've sent the full HTTP request, break
-        if (strstr(buffer, "\r\n\r\n")) break;
-    }
-
-    // Forward backend response to client
-    while ((bytes_read = read(backend_fd, buffer, sizeof(buffer))) > 0) {
-        if (write(client_fd, buffer, bytes_read) != bytes_read) {
-            log_error("Failed to forward response to client");
+        total_sent += bytes_written;
+        
+        // Check for end of HTTP request
+        if (strstr(buffer, "\r\n\r\n")) {
             break;
         }
     }
 
+    if (bytes_read < 0) {
+        log_error("Failed to read from client: %s", strerror(errno));
+        close(backend_fd);
+        return -1;
+    }
+
+    log_info("Forwarded %zu bytes to backend %s:%d", 
+             total_sent, backend->ip, backend->port);
+
+    // Forward backend response to client
+    size_t total_received = 0;
+    while ((bytes_read = read(backend_fd, buffer, sizeof(buffer))) > 0) {
+        ssize_t bytes_written = write(client_fd, buffer, bytes_read);
+        if (bytes_written < 0) {
+            log_error("Failed to forward response to client: %s", strerror(errno));
+            break;
+        }
+        total_received += bytes_written;
+    }
+
+    log_info("Received %zu bytes from backend", total_received);
+    
     close(backend_fd);
     return 0;
 }

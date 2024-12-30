@@ -13,10 +13,10 @@ int main(int argc, char *argv[]) {
     }
 
     // Configure proxy backend(s)
-    proxy_add_backend(server_config->proxy_config, "93.127.172.77", 5000);
-    
 
-    server_config->port = 8080;  // Change port if needed
+proxy_add_backend(server_config->proxy_config, "93.127.172.77", 5000);
+server_config->port = 8081;
+  // Change port if needed
     server_config->worker_count = 8;  // Adjust worker count
 
     // Start the server

@@ -1,8 +1,9 @@
 // src/main.c
 #include <stdio.h>
-#include "core/server.h"
-#include "modules/proxy.h"
-
+#include <stdlib.h>
+#include "../src/core/server.h"
+#include "../src/modules/proxy.h"
+#include "../src/utils/logging.h" 
 int main(int argc, char *argv[]) {
     // Initialize server configuration
     server_config_t* server_config = server_init();

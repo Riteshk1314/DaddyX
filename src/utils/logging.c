@@ -1,6 +1,7 @@
 
 // src/utils/logging.c
 #include "logging.h"
+#include <unistd.h>  // getpid()
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>

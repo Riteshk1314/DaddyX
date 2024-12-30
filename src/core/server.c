@@ -63,7 +63,7 @@ static void worker_process(server_config_t* config) {
 
     while (1) {
             client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &client_len);
-            accept() is a system call that:
+            // accept() is a system call that:
 
 // Waits for incoming client connections
 // Creates a new socket specifically for this client

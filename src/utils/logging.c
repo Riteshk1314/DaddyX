@@ -4,6 +4,12 @@
 #include <unistd.h>  // getpid()
 #include <stdlib.h>
 #include <string.h>
+#include "logging.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include <time.h>
+#include <string.h>
+
 #include <pthread.h>
 
 static log_level_t current_log_level = LOG_INFO;

@@ -51,7 +51,7 @@ int proxy_handle_request(int client_fd, proxy_config_t* config) {
         return -1;
     }
 
-    backend_server_t* backend = &config->backends[0]; // Using first backend (93.127.172.77:5000)
+    backend_server_t* backend = &config->backends[0];
     
     // Create connection to backend
     int backend_fd = socket(AF_INET, SOCK_STREAM, 0);

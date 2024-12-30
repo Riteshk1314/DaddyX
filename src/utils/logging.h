@@ -22,5 +22,10 @@ void log_debug(const char* format, ...);
 void log_info(const char* format, ...);
 void log_warn(const char* format, ...);
 void log_error(const char* format, ...);
+// src/utils/logging.h
+
+
+
+#endif
 
 #endif // LOGGING_H

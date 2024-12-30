@@ -4,6 +4,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <netinet/in.h>
+#include "../utils/logging.h"
+
 #include "../utils/logging.h"
 
 #define BUFFER_SIZE 8192

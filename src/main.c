@@ -4,7 +4,6 @@
 #include "../src/core/server.h"
 #include "../src/modules/proxy.h"
 #include "../src/utils/logging.h" 
-
 int main(int argc, char *argv[]) {
     // Initialize server configuration
     server_config_t* server_config = server_init();
@@ -13,14 +12,12 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    // Add backend for API requests
-    proxy_add_backend_with_path(server_config->proxy_config, "93.127.172.77", 5000, "/api/auth");
+    // Configure proxy backend(s)
+    proxy_add_backend(server_config->proxy_config, "93.127.172.77", 5000);
     
-    // Add default backend (optional)
-    proxy_add_backend_with_path(server_config->proxy_config, "15.197.148.33", 8081, NULL);
 
-    server_config->port = 8080;
-    server_config->worker_count = 8;
+    server_config->port = 8080;  // Change port if needed
+    server_config->worker_count = 8;  // Adjust worker count
 
     // Start the server
     int result = server_start(server_config);

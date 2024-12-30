@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include "../utils/logging.h"
+#include <errno.h>     // Added for errno
 
 #define BUFFER_SIZE 8192
 
@@ -44,7 +45,6 @@ int proxy_add_backend(proxy_config_t* config, const char* ip, int port) {
     log_info("Added backend server %s:%d", ip, port);
     return 0;
 }
-
 int proxy_handle_request(int client_fd, proxy_config_t* config) {
     if (config->backend_count == 0) {
         log_error("No backend servers configured");
@@ -62,7 +62,7 @@ int proxy_handle_request(int client_fd, proxy_config_t* config) {
 
     // Set timeout for both read and write operations
     struct timeval timeout;
-    timeout.tv_sec = HTTP_TIMEOUT_SECONDS;
+    timeout.tv_sec = HTTP_TIMEOUT_SECONDS;  // Now defined in proxy.h
     timeout.tv_usec = 0;
     setsockopt(backend_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
     setsockopt(backend_fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));

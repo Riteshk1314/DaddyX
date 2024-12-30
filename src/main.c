@@ -1,3 +1,9 @@
+// src/main.c
+#include <stdio.h>
+#include <stdlib.h>
+#include "../src/core/server.h"
+#include "../src/modules/proxy.h"
+#include "../src/utils/logging.h" 
 int main(int argc, char *argv[]) {
     // Initialize server configuration
     server_config_t* server_config = server_init();
@@ -7,7 +13,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Add backend for API requests
-    proxy_add_backend_with_path(server_config->proxy_config, "93.127.172.77", 5000,"");
+    proxy_add_backend_with_path(server_config->proxy_config, "93.127.172.77", 5000, "/api/auth");
     
     // Add default backend (optional)
     proxy_add_backend_with_path(server_config->proxy_config, "15.197.148.33", 8081, NULL);

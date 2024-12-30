@@ -26,6 +26,5 @@ void log_error(const char* format, ...);
 
 
 
-#endif
 
 #endif // LOGGING_H
